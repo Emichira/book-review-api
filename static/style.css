@@ -1,3 +1,12 @@
-.important {
-    color: aquamarine;
+html,
+body {
+  height: 100%;
+}
+
+#content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  flex-shrink: none;
 }
