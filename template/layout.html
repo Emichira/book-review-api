@@ -1,23 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+<!-- Begin Head -->
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}" />
     <title>{% block title %}{% endblock %} - Book Review API</title>
     {% endblock %}
 </head>
 
-<body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
-        {% block footer %}
-        &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
-        {% endblock %}
+<body class="bootstrap">
+    <!-- Top Navbar -->
+    {% block heading %}
+    <div>
+        <h1>navbar</h1>
     </div>
-</body>
+    {% endblock %}
 
+    <!-- Main Content -->
+    <div id="content">{% block content %}{% endblock %}</div>
+
+    <!-- Footer -->
+    {% block footer %}
+    <div id="footer">
+        &copy; Copyright 2010 by <a href="http://domain.invalid/">Emmanuel Michira</a>.
+    </div>
+    {% endblock %}
+
+</body>
 </html>
