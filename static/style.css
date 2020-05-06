@@ -3,10 +3,21 @@ body {
   height: 100%;
 }
 
+.p-t-80 {
+  padding-top: 80px;
+}
+
+.m-t-20 {
+  margin-top: 10px;
+}
+
 #content {
   flex: 1 0 auto;
 }
 
+.bookshelf {
+  height: 200px;
+}
 #sticky-footer {
   flex-shrink: none;
 }

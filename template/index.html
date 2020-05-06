@@ -5,8 +5,76 @@
 
 {% endblock %}
 {% block content %}
-    <h1>Index</h1>
-    <p class="important">
-        Welcome on my awesome homepage.
+<div class="jumbotron jumbotron-fluid p-t-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="display-4">Page Turners</h1>
+                <p class="lead">Discover your next favorite book.</p>
+                <p>Page Turners helps you explore and discover over 5,000 books without ever leaving the
+                    comfort of your couch.</p>
+            </div>
+            <div class="col-sm-6">
+                <div class="card bg-dark text-white">
+                    <img src="{{url_for('static', filename='img/book1.jpg')}}" class="bookshelf" alt="bookshelf image"
+                        align="middle" />
+
+                    <div class="card-img-overlay">
+                        <h5 class="card-title">Book Review API</h5>
+                        <blockquote class="card-text">“Good friends, good books, and a sleepy conscience: this is the
+                            ideal life.”
+                        </blockquote>
+                        <strong class="card-text">― Mark Twain</strong>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 m-t-20">
+                    <div class="col mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Sign In</h5>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Username</label>
+                                        <input type="text" class="form-control" id="username"
+                                            aria-describedby="usename">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Password</label>
+                                        <input type="password" class="form-control" id="exampleInputPassword1">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Sign In</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Create An Account</h5>
+                                <form>
+                                    <div class="form-group">
+                                        <input type="email" class="form-control" id="email"
+                                            placeholder="Email Address*" aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="username" placeholder="Username*">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" id="password" placeholder="Password*">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password*">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
