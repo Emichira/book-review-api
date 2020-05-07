@@ -4,7 +4,7 @@ from flask import Flask, session, render_template, url_for, request, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__, template_folder="template")
 bcrypt = Bcrypt(app)
