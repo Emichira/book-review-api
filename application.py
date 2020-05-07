@@ -24,3 +24,11 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     return render_template("index.html");
+
+@app.route("/home")
+def home():
+    return render_template("homepage.html")
+
+@app.route("/book")
+def book():
+    return render_template("book.html")

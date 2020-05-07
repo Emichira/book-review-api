@@ -3,11 +3,15 @@ body {
   height: 100%;
 }
 
+.p-10 {
+  padding: 3px;
+}
+
 .p-t-80 {
   padding-top: 80px;
 }
 
-.m-t-20 {
+.m-t-10 {
   margin-top: 10px;
 }
 
