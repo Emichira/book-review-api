@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, render_template, url_for, request, redirect
+from flask import Flask, session, render_template, url_for, request, redirect, session, flash
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -22,14 +22,36 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
 @app.route("/")
 def index():
+    """ Index page """
     return render_template("index.html");
 
-@app.route("/")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("home.html");
+    """ Handles signing in of users """
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # check if username exists in database
+        data = db.execute("SELECT * FROM users WHERE username = :username", {"username": username}).fetchone()
+        if data is None:
+            return render_template("index.html", message="Invalid username.")
+
+        # Check if hashed password matches one in database
+        if bcrypt.check_password_hash(data.password.encode('utf-8'), password.encode('utf-8')):
+            # Create session data, we can access this data in other routes
+            session['loggedin'] = True
+            session["id"] = data['id']
+            session["username"] = data['username']
+            return redirect(url_for("home"))
+
+        else:
+            return render_template("index.html", message="Invalid password")
+
+    else:
+        return render_template("index.html", message="Please Sign In")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -44,11 +66,11 @@ def register():
         exist = db.execute("SELECT * FROM users WHERE email = :email",
                                 {"email": email}).fetchone()
         if exist:
-            return render_template("index.html", message="Email already exists. Please Sign In")
+            return render_template("index.html", info="Email already exists.")
 
         # Check if password and confirm password  match
         elif password != confirm_password:
-            return render_template("index.html", message="Passwords do not match.")
+            return render_template("index.html", info="Passwords do not match.")
 
         # Hash the password so plaintext version isn't saved.
         pw_hash = bcrypt.generate_password_hash(password).decode('utf-8')
@@ -67,8 +89,28 @@ def register():
 
 @app.route("/home")
 def home():
-    return render_template("homepage.html")
+    # Check if user is logged in
+    if 'loggedin' in session:
+        # User is loggedin show them the home page
+        return render_template('homepage.html', username=session['username'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
 
 @app.route("/book")
 def book():
-    return render_template("book.html")
+    # Check if user is logged in
+    if 'loggedin' in session:
+        # User is loggedin show them the book page
+        return render_template('book.html', username=session['username'])
+    # User is not loggedin redirect to login page
+    return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    """ Handles logging out of users """
+    # Remove session data, this will log the user out
+    session.pop('loggedin', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    # Redirect to login page
+    return redirect(url_for('login'))
