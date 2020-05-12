@@ -29,3 +29,9 @@ body {
 #sticky-footer {
   flex-shrink: none;
 }
+
+.kala {
+  color: black;
+  size: 25px;
+  margin-bottom: -24px;
+}

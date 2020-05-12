@@ -34,7 +34,7 @@
                         <a class="nav-link" href="{{url_for('home')}}">Search</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{url_for('logout')}}">Logout</a>
+                        <a class="nav-link" href="{{url_for('logout')}}">Logout {{ username }}</a>
                     </li>
                 </ul>
             </div>
@@ -42,8 +42,20 @@
     </nav>
     {% endblock %}
 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class='flashes jumbotron jumbotron-fluid'>
+        {% for message in messages %}
+        <li class="kala">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
     <!-- Main Content -->
-    <div id="content">{% block content %}{% endblock %}</div>
+    {% block content %}
+    <div id="content"></div>
+    {% endblock %}
 
     {% block footer %}
     <!-- Footer -->
