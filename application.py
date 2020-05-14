@@ -45,7 +45,7 @@ def login():
             session['loggedin'] = True
             session["id"] = data['id']
             session["username"] = data['username']
-            flash('Log In successfull')
+            # flash('Log In successfull')
             return redirect(url_for("home"))
 
         else:
@@ -82,7 +82,7 @@ def register():
 
         # Commit change to users database
         db.commit()
-        flash('You were registered successfully')
+        # flash('You were registered successfully')
 
         return redirect(url_for("login"))
 
@@ -94,6 +94,8 @@ def home():
     # Check if user is logged in
     if 'loggedin' in session:
         # User is loggedin show them the home page
+        # Search database for books
+        
         return render_template('homepage.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
@@ -114,6 +116,6 @@ def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)
-    flash('Log Out successfull')
+    # flash('Log Out successfull')
     # Redirect to login page
     return redirect(url_for('login'))
