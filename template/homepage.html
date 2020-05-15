@@ -11,33 +11,16 @@
             <div class="col-sm-6">
                 <div class="card">
                     <div class="card-body">
-                        <p>{{username}}</p>
                         <h5 class="card-title">Search</h5>
-                        <form>
+                        <form action="{{url_for('home')}}" method="POST">
                             <div class="form-row">
                                 <div class="col-9 p-10">
-                                    <input type="text" class="form-control form-control-sm"
+                                    <input name="query" type="text" class="form-control form-control-sm"
                                         placeholder="Search by Book Title, Author, or ISBN">
                                 </div>
                                 <div class="col p-10">
                                     <button type="submit" class="btn btn-primary mb-2 btn-sm">Search</button>
                                 </div>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="title">
-                                <label class="form-check-label" for="inlineCheckbox1">Title</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="author">
-                                <label class="form-check-label" for="inlineCheckbox2">Author</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="year">
-                                <label class="form-check-label" for="inlineCheckbox3">Year</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="isbn">
-                                <label class="form-check-label" for="inlineCheckbox3">ISBN</label>
                             </div>
                         </form>
                     </div>
@@ -45,36 +28,31 @@
                 <div class="card m-t-10">
                     <div class="card-body">
                         <h5 class="card-title">Search Result</h5>
-                        <p class="card-text">Books matching "game of thrones".</p>
+                        <p class="card-text">Books matching {{ query }}.</p>
+                        {% if books %}
                         <table class="table table-hover">
                             <thead>
                                 <tr>
+                                    <th scope="col">ISBN</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Author</th>
                                     <th scope="col">Year</th>
-                                    <th scope="col">ISBN</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for book in books %}
                                 <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
+                                    <th scope="row">{{ book['isbn'] }}</th>
+                                    <td>{{ book['title'] }}</td>
+                                    <td>{{ book["author"] }}</td>
+                                    <td>{{ book["year"] }} </td>
                                 </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td colspan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
+                        {% else %}
+                        <p class="card-text">Oops. We can not find books matching {{ query }}</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

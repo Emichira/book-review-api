@@ -89,15 +89,30 @@ def register():
     else:
         return render_template("index.html")
 
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def home():
+    """ Handles searching of books in database """
     # Check if user is logged in
     if 'loggedin' in session:
-        # User is loggedin show them the home page
-        # Search database for books
-        
-        return render_template('homepage.html', username=session['username'])
-    # User is not loggedin redirect to login page
+        if request.method == "POST":
+            query = request.form.get("query")
+            # raw sql to retrieve all books that match the {query} provided by user
+            data = db.execute("SELECT isbn, title, author, year \
+                                FROM books WHERE isbn iLIKE :query OR title iLIKE :query \
+                                    OR author iLIKE :query LIMIT 10", {'query': f'%{query}%'}).fetchall()
+            # create an empty dictionary to hold all retrived books details
+            session["books"] = []
+            # loop the retrieved books and store a books details as values set to respective dict key names
+            for row in data:
+                book = dict()
+                book["isbn"] = row[0]
+                book["title"] = row[1]
+                book["author"] = row[2]
+                book["year"] = row[3]
+                session["books"].append(book)
+            return render_template("homepage.html", username=session['username'], query=query, books=session["books"])
+        return render_template("homepage.html", username=session['username'])
+    # If user is not logged in redirect to login page
     return redirect(url_for('login'))
 
 @app.route("/book")
