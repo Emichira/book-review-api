@@ -115,12 +115,16 @@ def home():
     # If user is not logged in redirect to login page
     return redirect(url_for('login'))
 
-@app.route("/book")
-def book():
+@app.route("/book/<isbn>", methods=["GET", "POST"])
+def book(isbn):
+    """ Handles displaying of books details and reviews """
     # Check if user is logged in
     if 'loggedin' in session:
-        # User is loggedin show them the book page
-        return render_template('book.html', username=session['username'])
+        if request.method == "POST":
+            return render_template('book.html', username=session['username'])
+        else:
+            book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+            return render_template('book.html', username=session['username'], book=book)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
