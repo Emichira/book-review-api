@@ -5,6 +5,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_bcrypt import Bcrypt
+from flask_jsonpify import jsonify
 
 app = Flask(__name__, template_folder="template")
 bcrypt = Bcrypt(app)
@@ -117,7 +118,7 @@ def home():
 
 @app.route("/book/<isbn>", methods=["GET", "POST"])
 def book(isbn):
-    """ Handles displaying of books details and reviews """
+    """Return details about a single book"""
     # Check if user is logged in
     if 'loggedin' in session:
         """ Fetch GoodReads reviews """
@@ -146,13 +147,35 @@ def book(isbn):
             if db.execute("SELECT * FROM reviews WHERE user_id = :username AND book_id = :isbn", {"username": user, "isbn": isbn}).rowcount > 0:
                     return render_template("book.html", username=session['username'], reviews=reviews, book=book, message="You have already posted a Review.", isbn=isbn, rating=rating, ratings=ratings)
             else:
-                db.execute("INSERT INTO reviews (user_id, book_id, review, ratings) VALUES (:user_id, :book_id, :review, :ratings)", {"user_id": user, "book_id": isbn, "review": review, "ratings": ratings})
+                db.execute("INSERT INTO reviews (user_id, book_id, review, rating) VALUES (:user_id, :book_id, :review, :ratings)", {"user_id": user, "book_id": isbn, "review": review, "ratings": ratings})
                 db.commit()
                 return render_template('book.html', username=session['username'], reviews=reviews, book=book, info="Review successfully added", rating=rating, ratings=ratings)
         else:
             return render_template('book.html', username=session['username'], reviews=reviews, book=book, rating=rating, ratings=ratings)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+@app.route("/api/<isbn>", methods=["GET"])
+def api(isbn):
+    # fetch book details in books table using isbn and parse details to page
+    book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+    # fetch all reviews in database
+    reviews = db.execute("SELECT COUNT(user_id), AVG(rating) FROM reviews WHERE book_id = :isbn", {"isbn": isbn}).fetchone()
+    # check if result from db query is empty and catch error
+    if book is None:
+        return jsonify({"error":"Something went wrong"}), 404
+    if reviews is None:
+        return jsonify({"error":"Something went wrong"}), 404
+    # store book details in a dictionary called response
+    resp = {}
+    resp['title'] = book.title
+    resp['author'] = book.author
+    resp['year'] = book.year
+    resp['isbn'] = book.isbn
+    resp['review_count'] = str(reviews[0])
+    resp['average_score'] = float(reviews[1])
+    # convert response dictionary to api readable json format
+    return jsonify(resp), 200
 
 @app.route('/logout')
 def logout():
