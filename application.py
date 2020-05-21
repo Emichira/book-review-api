@@ -1,4 +1,4 @@
-import os
+import os, json, requests
 
 from flask import Flask, session, render_template, url_for, request, redirect, session, flash
 from flask_session import Session
@@ -120,11 +120,37 @@ def book(isbn):
     """ Handles displaying of books details and reviews """
     # Check if user is logged in
     if 'loggedin' in session:
+        """ Fetch GoodReads reviews """
+        # get goodreads api key enviroment variable
+        api_key = os.getenv("GOODREADS_API_KEY")
+        # Query goodreads api with  api key and books ISBN as parameters
+        api_query = requests.get("https://www.goodreads.com/book/review_counts.json",
+            params={"key": api_key, "isbns": isbn})
+        if api_query.status_code != 200:
+            return render_template("book.html", warning="404 Error")
+        # convert to json format
+        response = api_query.json()
+        rating = response['books'][0]['average_rating']
+        ratings = response['books'][0]['work_ratings_count']
+        # fetch book using isbn and parse details to page
+        book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
+        # fetch all reviews in database
+        reviews = db.execute("SELECT * FROM reviews WHERE book_id = :isbn", {"isbn": isbn}).fetchall()
         if request.method == "POST":
-            return render_template('book.html', username=session['username'])
+            # fetch form data
+            review = request.form.get("review")
+            ratings = request.form.get("ratings")
+            user = session['username']
+            # fetch book using isbn and parse details to page
+            # check if user's review already exists
+            if db.execute("SELECT * FROM reviews WHERE user_id = :username AND book_id = :isbn", {"username": user, "isbn": isbn}).rowcount > 0:
+                    return render_template("book.html", username=session['username'], reviews=reviews, book=book, message="You have already posted a Review.", isbn=isbn, rating=rating, ratings=ratings)
+            else:
+                db.execute("INSERT INTO reviews (user_id, book_id, review, ratings) VALUES (:user_id, :book_id, :review, :ratings)", {"user_id": user, "book_id": isbn, "review": review, "ratings": ratings})
+                db.commit()
+                return render_template('book.html', username=session['username'], reviews=reviews, book=book, info="Review successfully added", rating=rating, ratings=ratings)
         else:
-            book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
-            return render_template('book.html', username=session['username'], book=book)
+            return render_template('book.html', username=session['username'], reviews=reviews, book=book, rating=rating, ratings=ratings)
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
