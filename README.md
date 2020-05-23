@@ -49,13 +49,11 @@ $ export GOODREADS_API_KEY = Your Goodreads Developer API Key# See: https://www.
 ```
 ## Authors
 ```
-* **Emmanuel Michira** - [Software Developer](https://emichira.github.io/Portfolio/)
+⋅⋅* [Emmanuel Michira - Software Developer](https://emichira.github.io/Portfolio/)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 ```
 ## License
 ```
-- **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2020 © <a href="https://emichira.github.io/Portfolio/" target="_blank">Emmanuel Michira</a>.
+⋅⋅* [MIT license]
 
 ```

@@ -65,10 +65,10 @@ def register():
         confirm_password = request.form.get("confirmPassword")
 
         # Check if email already exists
-        exist = db.execute("SELECT * FROM users WHERE email = :email",
-                                {"email": email}).fetchone()
+        exist = db.execute("SELECT * FROM users WHERE email = :email OR username = :username",
+                                {"email": email, "username": username}).fetchone()
         if exist:
-            return render_template("index.html", info="Email already exists.")
+            return render_template("index.html", info=f"{email} or {username} already exists.")
 
         # Check if password and confirm password  match
         elif password != confirm_password:
