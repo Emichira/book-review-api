@@ -12,22 +12,15 @@ $ git clone https://github.com/Emichira/book-review-api.git
 
 # Navigate into working folder
 $ cd project1
-
 # Create and Activate virtual enviroment
 $ pipenv shell
-
 # Install all dependencies
 $ pip install -r requirements.txt
-
 # ENV Variables
 $ export PATH = Your path to working project
-
 $ export FLASK_APP = application.py
-
 $ export FLASK_DEBUG = 1
-
 $ export DATABASE_URL = Your Heroku Postgres DB URI
-
 $ export GOODREADS_API_KEY = Your Goodreads Developer API Key# See: https://www.goodreads.com/api
 ```
 
@@ -43,15 +36,14 @@ $ export GOODREADS_API_KEY = Your Goodreads Developer API Key# See: https://www.
 
 ## Built With
 
-⋅⋅* [Flask Python](https://flask.palletsprojects.com/en/1.1.x/) - The web framework used
-⋅⋅* [SQL] - Raw SQL querying used
+* [Flask Python](https://flask.palletsprojects.com/en/1.1.x/) - The web framework used
+* [SQL] - Raw SQL querying used
 * [Good Reads API](https://www.goodreads.com/api) - Popular book review website, used to get access to their review data for individual books.
 
 ## Authors
 
-⋅⋅⋅ [Emmanuel Michira - Software Developer](https://emichira.github.io/Portfolio/)
-
+* [Emmanuel Michira - Software Developer](https://emichira.github.io/Portfolio/)
 
 ## License
 
-⋅⋅* [MIT license]
+* [MIT license]
